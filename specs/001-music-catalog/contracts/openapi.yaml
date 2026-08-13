@@ -1,0 +1,1026 @@
+openapi: 3.0.3
+info:
+  title: Каталог музыкальных альбомов API
+  version: 1.0.0
+  description: REST API для каталогизации исполнителей, альбомов и песен.
+paths:
+  /api/albums/:
+    get:
+      operationId: albums_list
+      parameters:
+      - in: query
+        name: artist
+        schema:
+          type: number
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: year
+        schema:
+          type: integer
+      - in: query
+        name: year_max
+        schema:
+          type: integer
+      - in: query
+        name: year_min
+        schema:
+          type: integer
+      tags:
+      - albums
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAlbumListList'
+          description: ''
+    post:
+      operationId: albums_create
+      tags:
+      - albums
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlbumWrite'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AlbumWrite'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AlbumWrite'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlbumWrite'
+          description: ''
+  /api/albums/{id}/:
+    get:
+      operationId: albums_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Альбом.
+        required: true
+      tags:
+      - albums
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlbumDetail'
+          description: ''
+    put:
+      operationId: albums_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Альбом.
+        required: true
+      tags:
+      - albums
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlbumWrite'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AlbumWrite'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AlbumWrite'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlbumWrite'
+          description: ''
+    patch:
+      operationId: albums_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Альбом.
+        required: true
+      tags:
+      - albums
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedAlbumWrite'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedAlbumWrite'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedAlbumWrite'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlbumWrite'
+          description: ''
+    delete:
+      operationId: albums_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Альбом.
+        required: true
+      tags:
+      - albums
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/albums/{id}/tracks/:
+    post:
+      operationId: albums_tracks_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Альбом.
+        required: true
+      tags:
+      - albums
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlbumDetail'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AlbumDetail'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AlbumDetail'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlbumDetail'
+          description: ''
+  /api/albums/{id}/tracks/{track_id}/:
+    patch:
+      operationId: albums_tracks_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Альбом.
+        required: true
+      - in: path
+        name: track_id
+        schema:
+          type: string
+          pattern: ^\d+$
+        required: true
+      tags:
+      - albums
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedAlbumDetail'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedAlbumDetail'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedAlbumDetail'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlbumDetail'
+          description: ''
+    delete:
+      operationId: albums_tracks_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Альбом.
+        required: true
+      - in: path
+        name: track_id
+        schema:
+          type: string
+          pattern: ^\d+$
+        required: true
+      tags:
+      - albums
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/albums/{id}/tracks/reorder/:
+    post:
+      operationId: albums_tracks_reorder_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Альбом.
+        required: true
+      tags:
+      - albums
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlbumDetail'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AlbumDetail'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AlbumDetail'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlbumDetail'
+          description: ''
+  /api/artists/:
+    get:
+      operationId: artists_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - artists
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedArtistList'
+          description: ''
+    post:
+      operationId: artists_create
+      tags:
+      - artists
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Artist'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Artist'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Artist'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Artist'
+          description: ''
+  /api/artists/{id}/:
+    get:
+      operationId: artists_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Исполнитель.
+        required: true
+      tags:
+      - artists
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Artist'
+          description: ''
+    put:
+      operationId: artists_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Исполнитель.
+        required: true
+      tags:
+      - artists
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Artist'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Artist'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Artist'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Artist'
+          description: ''
+    patch:
+      operationId: artists_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Исполнитель.
+        required: true
+      tags:
+      - artists
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedArtist'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedArtist'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedArtist'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Artist'
+          description: ''
+    delete:
+      operationId: artists_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Исполнитель.
+        required: true
+      tags:
+      - artists
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/songs/:
+    get:
+      operationId: songs_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - songs
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSongList'
+          description: ''
+    post:
+      operationId: songs_create
+      tags:
+      - songs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Song'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Song'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Song'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Song'
+          description: ''
+  /api/songs/{id}/:
+    get:
+      operationId: songs_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Песня.
+        required: true
+      tags:
+      - songs
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Song'
+          description: ''
+    put:
+      operationId: songs_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Песня.
+        required: true
+      tags:
+      - songs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Song'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Song'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Song'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Song'
+          description: ''
+    patch:
+      operationId: songs_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Песня.
+        required: true
+      tags:
+      - songs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSong'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSong'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSong'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Song'
+          description: ''
+    delete:
+      operationId: songs_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Песня.
+        required: true
+      tags:
+      - songs
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    AlbumDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          title: Название
+          maxLength: 300
+        artist:
+          type: integer
+          title: Исполнитель
+        artist_name:
+          type: string
+          readOnly: true
+        year:
+          type: integer
+          maximum: 2027
+          minimum: 1860
+          title: Год выпуска
+        tracks:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlbumTrack'
+          readOnly: true
+      required:
+      - artist
+      - artist_name
+      - id
+      - title
+      - tracks
+      - year
+    AlbumList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          title: Название
+          maxLength: 300
+        artist:
+          type: integer
+          title: Исполнитель
+        artist_name:
+          type: string
+          readOnly: true
+        year:
+          type: integer
+          maximum: 2027
+          minimum: 1860
+          title: Год выпуска
+        tracks_count:
+          type: integer
+          readOnly: true
+          default: 0
+      required:
+      - artist
+      - artist_name
+      - id
+      - title
+      - tracks_count
+      - year
+    AlbumTrack:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        song:
+          allOf:
+          - $ref: '#/components/schemas/SongLite'
+          readOnly: true
+        position:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 1
+          format: int64
+          title: Номер трека
+      required:
+      - id
+      - position
+      - song
+    AlbumWrite:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          title: Название
+          maxLength: 300
+        artist:
+          type: integer
+          title: Исполнитель
+        year:
+          type: integer
+          maximum: 2027
+          minimum: 1860
+          title: Год выпуска
+      required:
+      - artist
+      - id
+      - title
+      - year
+    Artist:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Имя
+          maxLength: 200
+        albums_count:
+          type: integer
+          readOnly: true
+          default: 0
+      required:
+      - albums_count
+      - id
+      - name
+    PaginatedAlbumListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlbumList'
+    PaginatedArtistList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Artist'
+    PaginatedSongList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Song'
+    PatchedAlbumDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          title: Название
+          maxLength: 300
+        artist:
+          type: integer
+          title: Исполнитель
+        artist_name:
+          type: string
+          readOnly: true
+        year:
+          type: integer
+          maximum: 2027
+          minimum: 1860
+          title: Год выпуска
+        tracks:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlbumTrack'
+          readOnly: true
+    PatchedAlbumWrite:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          title: Название
+          maxLength: 300
+        artist:
+          type: integer
+          title: Исполнитель
+        year:
+          type: integer
+          maximum: 2027
+          minimum: 1860
+          title: Год выпуска
+    PatchedArtist:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Имя
+          maxLength: 200
+        albums_count:
+          type: integer
+          readOnly: true
+          default: 0
+    PatchedSong:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          title: Название
+          maxLength: 300
+        albums:
+          type: array
+          items:
+            $ref: '#/components/schemas/SongTrackEntry'
+          readOnly: true
+    Song:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          title: Название
+          maxLength: 300
+        albums:
+          type: array
+          items:
+            $ref: '#/components/schemas/SongTrackEntry'
+          readOnly: true
+      required:
+      - albums
+      - id
+      - title
+    SongLite:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          title: Название
+          maxLength: 300
+      required:
+      - id
+      - title
+    SongTrackEntry:
+      type: object
+      description: Отображение вхождения песни в конкретный альбом (для страницы песни).
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        album_id:
+          type: integer
+          readOnly: true
+        album_title:
+          type: string
+          readOnly: true
+        artist_name:
+          type: string
+          readOnly: true
+        year:
+          type: integer
+          readOnly: true
+        position:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 1
+          format: int64
+          title: Номер трека
+      required:
+      - album_id
+      - album_title
+      - artist_name
+      - id
+      - position
+      - year
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
