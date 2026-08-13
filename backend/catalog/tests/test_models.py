@@ -32,8 +32,16 @@ def test_song_can_belong_to_multiple_albums_with_different_positions():
 
 
 @requires_deferrable_constraints
+@pytest.mark.django_db(transaction=True)
 def test_duplicate_position_in_same_album_is_rejected():
-    """Инвариант 2."""
+    """Инвариант 2.
+
+    uniq_position_per_album объявлен DEFERRED (см. data-model.md): проверка
+    срабатывает не на INSERT, а на COMMIT транзакции. Обычный тест
+    pytest-django оборачивает тело в savepoint и никогда не коммитит его
+    по-настоящему, поэтому здесь нужен transaction=True — тест выполняется
+    в реальных автокоммитящихся транзакциях, как и в проде.
+    """
     album = AlbumFactory()
     AlbumTrackFactory(album=album, position=1)
 
