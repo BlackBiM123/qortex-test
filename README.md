@@ -117,6 +117,50 @@ npm run build         # production-сборка
 CI (`.github/workflows/ci.yml`) прогоняет всё это на каждый push/PR — backend-тесты идут
 против настоящего PostgreSQL, а не SQLite.
 
+## Деплой (Vercel + Render + Neon)
+
+Продакшн-развёртывание разнесено по трём бесплатным сервисам: статический frontend — на
+**Vercel**, backend — на **Render**, база данных — на **Neon** (у Render свой бесплатный Postgres
+истекает через 30 дней, у Neon бессрочный free tier).
+
+Репозиторий уже содержит всю нужную конфигурацию (`render.yaml`, `frontend/vercel.json`,
+gunicorn+whitenoise в backend), но сами аккаунты и связку через дашборды нужно завести вручную —
+это шаги с OAuth/оплатой, которые нельзя выполнить программно.
+
+**1. База данных (Neon)**
+
+1. Зарегистрируйтесь на [neon.tech](https://neon.tech), создайте проект.
+2. Скопируйте **connection string** (Dashboard → Connection Details) — он уже содержит
+   `sslmode=require`, ничего добавлять не нужно.
+
+**2. Backend (Render)**
+
+1. Запушьте репозиторий на GitHub (если ещё не сделали).
+2. На [render.com](https://render.com) → New → Blueprint → выберите репозиторий. Render
+   прочитает `render.yaml` и создаст веб-сервис из `backend/Dockerfile`.
+3. В настройках сервиса (Environment) вставьте `DATABASE_URL` — connection string из Neon
+   (в `render.yaml` эта переменная намеренно помечена `sync: false`, т.е. не хранится в репозитории).
+4. После первого деплоя Render присвоит домен вида `qortex-catalog-backend.onrender.com` —
+   впишите его в переменную `DJANGO_ALLOWED_HOSTS` в дашборде (замените плейсхолдер из `render.yaml`).
+5. Проверьте: `https://<ваш-домен>.onrender.com/api/albums/` должен отдавать JSON.
+
+> Free-план Render засыпает после 15 минут простоя — первый запрос после паузы выполняется
+> ~30–60 секунд, это нормально для тестового задания.
+
+**3. Frontend (Vercel)**
+
+1. На [vercel.com](https://vercel.com) → New Project → выберите тот же репозиторий.
+2. **Root Directory** — обязательно укажите `frontend` (репозиторий монорепозиторный, `vercel.json`
+   уже лежит внутри `frontend/`).
+3. Environment Variables → добавьте `VITE_API_BASE_URL` = `https://<ваш-домен>.onrender.com/api`
+   (переменная встраивается в бандл на этапе сборки, см. `frontend/src/api/client.ts`).
+4. Deploy. Vercel даст домен вида `your-app.vercel.app`.
+5. Вернитесь в Render → обновите `CORS_ALLOWED_ORIGINS` на этот домен Vercel (иначе backend
+   отклонит запросы браузера по CORS) и передеплойте backend-сервис.
+
+После этого демоданные и весь функционал (включая переиспользование песни между альбомами)
+доступны на публичном URL — то же самое, что видно локально через `docker compose up`.
+
 ## Структура репозитория
 
 ```

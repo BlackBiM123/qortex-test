@@ -1,8 +1,14 @@
 import axios from 'axios'
 import type { ApiErrorPayload } from '@/types'
 
+// В dev-режиме и при сборке в один контейнер с backend — относительный
+// путь /api (через Vite-прокси или общий домен). При раздельном хостинге
+// (например, фронт на Vercel, backend на Render) на этапе сборки задаётся
+// VITE_API_BASE_URL с абсолютным адресом backend.
+const baseURL = import.meta.env.VITE_API_BASE_URL || '/api'
+
 export const apiClient = axios.create({
-  baseURL: '/api',
+  baseURL,
   headers: { 'Content-Type': 'application/json' },
 })
 

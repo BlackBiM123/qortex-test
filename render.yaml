@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: qortex-catalog-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    healthCheckPath: /api/albums/
+    dockerCommand: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings.prod
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "False"
+      # Замените на реальный домен, который Render присвоит сервису
+      # (виден в дашборде после первого деплоя), например:
+      # qortex-catalog-backend.onrender.com
+      - key: DJANGO_ALLOWED_HOSTS
+        value: qortex-catalog-backend.onrender.com
+      # Замените на реальный домен фронтенда на Vercel.
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://your-app.vercel.app
+      # Вставьте вручную в дашборде Render — connection string из Neon
+      # (Settings -> Environment). Не хранится в репозитории.
+      - key: DATABASE_URL
+        sync: false
