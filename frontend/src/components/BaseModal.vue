@@ -5,64 +5,30 @@ const emit = defineEmits<{ close: [] }>()
 
 <template>
   <Teleport to="body">
-    <div class="overlay" @click.self="emit('close')">
-      <div class="modal card">
-        <div class="modal-header">
-          <h2>{{ title }}</h2>
-          <button class="close-btn" type="button" aria-label="Закрыть" @click="emit('close')">
+    <div
+      class="fixed inset-0 z-[900] flex items-center justify-center bg-ink/40 p-4"
+      @click.self="emit('close')"
+    >
+      <div
+        class="max-h-[90vh] w-full max-w-md overflow-y-auto border border-line bg-surface shadow-xl"
+      >
+        <div class="flex items-center justify-between border-b border-line px-6 py-4">
+          <h2 class="font-display text-xl font-semibold uppercase tracking-tight text-ink">
+            {{ title }}
+          </h2>
+          <button
+            type="button"
+            aria-label="Закрыть"
+            class="font-mono text-xl leading-none text-ink-muted hover:text-ink"
+            @click="emit('close')"
+          >
             &times;
           </button>
         </div>
-        <div class="modal-body">
+        <div class="p-6">
           <slot />
         </div>
       </div>
     </div>
   </Teleport>
 </template>
-
-<style scoped>
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-4);
-  z-index: 900;
-}
-
-.modal {
-  width: 100%;
-  max-width: 480px;
-  max-height: 90vh;
-  overflow-y: auto;
-  padding: var(--space-5);
-}
-
-.modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: var(--space-4);
-}
-
-.modal-header h2 {
-  margin: 0;
-  font-size: 1.25rem;
-}
-
-.close-btn {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  line-height: 1;
-  color: var(--color-text-muted);
-  padding: 0;
-}
-
-.close-btn:hover {
-  color: var(--color-text);
-}
-</style>

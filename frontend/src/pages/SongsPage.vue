@@ -42,33 +42,57 @@ onMounted(() => store.fetchSongs())
 
 <template>
   <div>
-    <h1>Песни</h1>
-    <p class="hint">
+    <h1 class="font-display text-3xl font-bold tracking-tight text-ink">Песни</h1>
+    <p class="mt-2 mb-8 max-w-2xl text-sm text-ink-muted">
       Одна песня может входить в несколько альбомов под разными номерами трека — это видно в колонке
       «Используется в альбомах».
     </p>
 
     <SearchInput v-model="searchInput" placeholder="Поиск по названию…" />
 
-    <p v-if="store.loading" class="state-message">Загрузка…</p>
-    <p v-else-if="store.items.length === 0" class="state-message">Песни не найдены.</p>
-    <ul v-else class="song-list">
-      <li v-for="song in store.items" :key="song.id" class="song-row card">
-        <div class="song-main">
-          <span class="song-title">{{ song.title }}</span>
-          <button class="btn btn-danger" type="button" @click="handleDelete(song.id)">
+    <p v-if="store.loading" class="py-16 text-center font-mono text-sm text-ink-muted">Загрузка…</p>
+    <p
+      v-else-if="store.items.length === 0"
+      class="py-16 text-center font-mono text-sm text-ink-muted"
+    >
+      Песни не найдены.
+    </p>
+    <ul v-else class="mt-6 flex flex-col gap-3">
+      <li v-for="song in store.items" :key="song.id" class="border border-line bg-surface p-4">
+        <div class="flex items-center justify-between gap-3">
+          <div class="flex items-center gap-2">
+            <span class="font-medium text-ink">{{ song.title }}</span>
+            <span
+              v-if="song.albums.length > 1"
+              class="border border-gold px-1.5 py-0.5 font-mono text-[0.65rem] tracking-widest text-gold uppercase"
+              >{{ song.albums.length }} альбома</span
+            >
+          </div>
+          <button
+            type="button"
+            class="font-mono text-xs text-danger hover:underline"
+            @click="handleDelete(song.id)"
+          >
             Удалить
           </button>
         </div>
-        <ul v-if="song.albums.length" class="album-usages">
-          <li v-for="entry in song.albums" :key="entry.id">
-            №{{ entry.position }} в
-            <RouterLink :to="`/albums/${entry.album_id}`">
+        <ul v-if="song.albums.length" class="mt-3 flex flex-col gap-1.5 border-t border-line pt-3">
+          <li
+            v-for="entry in song.albums"
+            :key="entry.id"
+            class="flex items-baseline gap-2 text-sm"
+          >
+            <span class="w-6 shrink-0 font-mono text-xs tabular-nums text-gold"
+              >№{{ entry.position }}</span
+            >
+            <RouterLink :to="`/albums/${entry.album_id}`" class="text-ink-muted hover:text-accent">
               «{{ entry.album_title }}» ({{ entry.artist_name }}, {{ entry.year }})
             </RouterLink>
           </li>
         </ul>
-        <p v-else class="no-usage">Пока не входит ни в один альбом.</p>
+        <p v-else class="mt-3 border-t border-line pt-3 text-sm text-ink-faint italic">
+          Пока не входит ни в один альбом.
+        </p>
       </li>
     </ul>
 
@@ -79,57 +103,3 @@ onMounted(() => store.fetchSongs())
     />
   </div>
 </template>
-
-<style scoped>
-h1 {
-  margin: 0 0 var(--space-2);
-  font-size: 1.5rem;
-}
-
-.hint {
-  color: var(--color-text-muted);
-  margin: 0 0 var(--space-5);
-  font-size: 0.9375rem;
-}
-
-.song-list {
-  list-style: none;
-  margin: var(--space-5) 0 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-.song-row {
-  padding: var(--space-3) var(--space-4);
-}
-
-.song-main {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.song-title {
-  font-weight: 500;
-}
-
-.album-usages {
-  list-style: none;
-  margin: var(--space-2) 0 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  font-size: 0.875rem;
-  color: var(--color-text-muted);
-}
-
-.no-usage {
-  margin: var(--space-2) 0 0;
-  font-size: 0.875rem;
-  color: var(--color-text-muted);
-  font-style: italic;
-}
-</style>

@@ -7,65 +7,33 @@ defineEmits<{ delete: [id: number] }>()
 </script>
 
 <template>
-  <div class="album-card card">
-    <RouterLink :to="`/albums/${album.id}`" class="album-link">
-      <h3>{{ album.title }}</h3>
-      <p class="artist">{{ album.artist_name }}</p>
-      <p class="meta">{{ album.year }} · {{ album.tracks_count }} треков</p>
-    </RouterLink>
-    <button
-      class="btn btn-danger delete-btn"
-      type="button"
-      title="Удалить альбом"
-      @click="$emit('delete', album.id)"
-    >
-      Удалить
-    </button>
+  <div class="group flex border border-line bg-surface transition-shadow hover:shadow-md">
+    <!-- Корешок: как у пластинки на полке. -->
+    <div class="w-2 shrink-0 bg-accent transition-colors group-hover:bg-gold" />
+
+    <div class="flex flex-1 flex-col gap-3 p-4">
+      <RouterLink :to="`/albums/${album.id}`" class="no-underline hover:no-underline">
+        <h3 class="font-display text-lg leading-tight font-semibold text-ink">
+          {{ album.title }}
+        </h3>
+        <p class="mt-1 text-sm text-ink-muted">{{ album.artist_name }}</p>
+      </RouterLink>
+
+      <div
+        class="mt-auto flex items-center justify-between border-t border-line pt-3 font-mono text-xs text-ink-faint"
+      >
+        <span class="tabular-nums">{{ album.year }}</span>
+        <span class="tabular-nums">{{ album.tracks_count }} треков</span>
+      </div>
+
+      <button
+        type="button"
+        title="Удалить альбом"
+        class="self-start font-mono text-xs text-danger opacity-0 transition-opacity group-hover:opacity-100 hover:underline"
+        @click="$emit('delete', album.id)"
+      >
+        Удалить
+      </button>
+    </div>
   </div>
 </template>
-
-<style scoped>
-.album-card {
-  padding: var(--space-4);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  transition: box-shadow 0.15s;
-}
-
-.album-card:hover {
-  box-shadow: var(--shadow-md);
-}
-
-.album-link {
-  color: var(--color-text);
-  flex: 1;
-}
-
-.album-link:hover {
-  text-decoration: none;
-}
-
-.album-link h3 {
-  margin: 0 0 var(--space-1);
-  font-size: 1.0625rem;
-}
-
-.artist {
-  margin: 0;
-  color: var(--color-text-muted);
-  font-size: 0.9375rem;
-}
-
-.meta {
-  margin: var(--space-1) 0 0;
-  color: var(--color-text-muted);
-  font-size: 0.8125rem;
-}
-
-.delete-btn {
-  align-self: flex-start;
-  font-size: 0.8125rem;
-  padding: var(--space-1) var(--space-2);
-}
-</style>

@@ -44,6 +44,10 @@ docker compose up --build
 docker compose exec backend python manage.py createsuperuser
 ```
 
+> Если после `git pull` изменились зависимости (`package.json`/`pyproject.toml`), пересоберите
+> образы и обновите volume с зависимостями, иначе в контейнере останутся старые пакеты:
+> `docker compose down && docker volume rm qortex-test_frontend_node_modules qortex-test_backend_venv && docker compose up --build`.
+
 Остановить и удалить контейнеры (данные в volume `db_data` сохранятся):
 
 ```bash

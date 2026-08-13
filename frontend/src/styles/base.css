@@ -1,150 +1,137 @@
-@import './tokens.css';
+@import 'tailwindcss';
 
-* {
-  box-sizing: border-box;
+/* Big Shoulders — конденсированный дисплейный шрифт: плакатная,
+   штампованная манера, как надпись на лейбле пластинки. Используется
+   для заголовков и логотипа. */
+@import '@fontsource/big-shoulders/600.css';
+@import '@fontsource/big-shoulders/700.css';
+
+/* IBM Plex Sans — нейтральный гуманистический текстовый шрифт. */
+@import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/500.css';
+@import '@fontsource/ibm-plex-sans/600.css';
+
+/* IBM Plex Mono — для табличных цифр: номера треков, годы, каталожные
+   данные. Отсылка к моноширинному шрифту, которым печатали номера
+   на лейблах пластинок и в каталожных карточках. */
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+
+@theme {
+  --font-display: 'Big Shoulders', system-ui, sans-serif;
+  --font-body: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  /* Тёплая бумага — карточный каталог, а не дежурный "SaaS-крем". */
+  --color-paper: #f1efea;
+  --color-surface: #ffffff;
+  --color-ink: #1c1b18;
+  --color-ink-muted: #6b6558;
+  --color-ink-faint: #a19a89;
+  --color-line: #ded9cd;
+
+  /* Петроль — вывеска старого магазина пластинок. */
+  --color-accent: #14666b;
+  --color-accent-strong: #0e4c50;
+  --color-accent-soft: #e3eeee;
+
+  /* Латунь — каталожная метка, номер трека. */
+  --color-gold: #b8862e;
+  --color-gold-soft: #f3e9d3;
+
+  --color-danger: #b23b2e;
+  --color-danger-soft: #f6e5e2;
+  --color-success: #3f7a4e;
+  --color-success-soft: #e6f0e7;
 }
 
-html,
-body {
-  margin: 0;
-  padding: 0;
+@media (prefers-color-scheme: dark) {
+  @theme {
+    --color-paper: #16191a;
+    --color-surface: #1e2224;
+    --color-ink: #ede9e0;
+    --color-ink-muted: #9c978a;
+    --color-ink-faint: #6e695d;
+    --color-line: #33383a;
+
+    --color-accent: #5cc2c8;
+    --color-accent-strong: #86d5da;
+    --color-accent-soft: #1c3436;
+
+    --color-gold: #d9a54b;
+    --color-gold-soft: #33291a;
+
+    --color-danger: #e2685a;
+    --color-danger-soft: #3a231f;
+    --color-success: #6fbf7f;
+    --color-success-soft: #1f3324;
+  }
 }
 
-body {
-  background: var(--color-bg);
-  color: var(--color-text);
-  font-family:
-    'Segoe UI',
-    system-ui,
-    -apple-system,
-    sans-serif;
-  line-height: 1.5;
-}
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
 
-#app {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
 
-a {
-  color: var(--color-primary);
-  text-decoration: none;
-}
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    line-height: 1.5;
+  }
 
-a:hover {
-  text-decoration: underline;
-}
+  #app {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
 
-button {
-  font-family: inherit;
-  cursor: pointer;
-}
+  a {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
 
-input,
-select,
-textarea {
-  font-family: inherit;
-  font-size: inherit;
-}
+  a:hover {
+    text-decoration: underline;
+  }
 
-.container {
-  width: 100%;
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 0 var(--space-5);
-}
+  button {
+    font-family: inherit;
+    cursor: pointer;
+  }
 
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
-  padding: var(--space-2) var(--space-4);
-  border-radius: var(--radius-sm);
-  border: 1px solid transparent;
-  font-size: 0.9375rem;
-  font-weight: 500;
-  transition:
-    background-color 0.15s,
-    border-color 0.15s;
-}
+  input,
+  select,
+  textarea {
+    font-family: inherit;
+    font-size: inherit;
+  }
 
-.btn-primary {
-  background: var(--color-primary);
-  color: white;
-}
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
 
-.btn-primary:hover {
-  background: var(--color-primary-hover);
-}
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+    letter-spacing: -0.01em;
+  }
 
-.btn-secondary {
-  background: var(--color-surface);
-  border-color: var(--color-border);
-  color: var(--color-text);
-}
-
-.btn-secondary:hover {
-  border-color: var(--color-primary);
-}
-
-.btn-danger {
-  background: var(--color-danger-bg);
-  color: var(--color-danger);
-}
-
-.btn-danger:hover {
-  filter: brightness(0.95);
-}
-
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  margin-bottom: var(--space-4);
-}
-
-.field label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--color-text-muted);
-}
-
-.field input,
-.field select {
-  padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface);
-  color: var(--color-text);
-}
-
-.field input:focus,
-.field select:focus {
-  outline: 2px solid var(--color-primary);
-  outline-offset: -1px;
-}
-
-.field-error {
-  font-size: 0.8125rem;
-  color: var(--color-danger);
-}
-
-.state-message {
-  text-align: center;
-  color: var(--color-text-muted);
-  padding: var(--space-6) 0;
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }

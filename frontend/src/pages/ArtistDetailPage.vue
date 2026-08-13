@@ -30,49 +30,40 @@ onMounted(async () => {
 
 <template>
   <div>
-    <button class="btn btn-secondary back-btn" type="button" @click="router.push('/artists')">
+    <button
+      type="button"
+      class="mb-8 font-mono text-xs tracking-widest text-ink-muted uppercase hover:text-accent"
+      @click="router.push('/artists')"
+    >
       ← К исполнителям
     </button>
 
-    <p v-if="loading" class="state-message">Загрузка…</p>
+    <p v-if="loading" class="py-16 text-center font-mono text-sm text-ink-muted">Загрузка…</p>
     <template v-else-if="artist">
-      <h1>{{ artist.name }}</h1>
-      <p class="meta">{{ artist.albums_count }} альбомов в каталоге</p>
+      <h1 class="font-display text-4xl font-bold tracking-tight text-ink">{{ artist.name }}</h1>
+      <p class="mt-2 font-mono text-sm tabular-nums text-ink-muted">
+        {{ artist.albums_count }} альбомов в каталоге
+      </p>
 
-      <ul v-if="albums.length" class="album-list">
-        <li v-for="album in albums" :key="album.id" class="card album-row">
-          <RouterLink :to="`/albums/${album.id}`">{{ album.title }}</RouterLink>
-          <span class="meta">{{ album.year }} · {{ album.tracks_count }} треков</span>
+      <ul v-if="albums.length" class="mt-6 flex flex-col border border-line bg-surface">
+        <li
+          v-for="album in albums"
+          :key="album.id"
+          class="flex items-center justify-between gap-4 border-b border-line px-4 py-3 last:border-b-0"
+        >
+          <RouterLink
+            :to="`/albums/${album.id}`"
+            class="font-medium text-ink no-underline hover:text-accent hover:no-underline"
+            >{{ album.title }}</RouterLink
+          >
+          <span class="font-mono text-xs tabular-nums text-ink-muted"
+            >{{ album.year }} · {{ album.tracks_count }} треков</span
+          >
         </li>
       </ul>
-      <p v-else class="state-message">У этого исполнителя пока нет альбомов.</p>
+      <p v-else class="py-16 text-center font-mono text-sm text-ink-muted">
+        У этого исполнителя пока нет альбомов.
+      </p>
     </template>
   </div>
 </template>
-
-<style scoped>
-.back-btn {
-  margin-bottom: var(--space-5);
-}
-
-.meta {
-  color: var(--color-text-muted);
-  font-size: 0.9375rem;
-}
-
-.album-list {
-  list-style: none;
-  margin: var(--space-5) 0 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.album-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--space-3) var(--space-4);
-}
-</style>

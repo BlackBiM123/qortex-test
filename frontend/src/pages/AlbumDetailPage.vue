@@ -63,28 +63,53 @@ onMounted(() => {
 
 <template>
   <div>
-    <button class="btn btn-secondary back-btn" type="button" @click="router.push('/')">
+    <button
+      type="button"
+      class="mb-8 font-mono text-xs tracking-widest text-ink-muted uppercase hover:text-accent"
+      @click="router.push('/')"
+    >
       ← К списку альбомов
     </button>
 
-    <p v-if="store.loading" class="state-message">Загрузка…</p>
-    <p v-else-if="store.error && !store.album" class="state-message">{{ store.error }}</p>
+    <p v-if="store.loading" class="py-16 text-center font-mono text-sm text-ink-muted">Загрузка…</p>
+    <p
+      v-else-if="store.error && !store.album"
+      class="py-16 text-center font-mono text-sm text-danger"
+    >
+      {{ store.error }}
+    </p>
 
     <template v-else-if="store.album">
-      <div class="album-header">
-        <h1>{{ store.album.title }}</h1>
-        <p class="artist">{{ store.album.artist_name }} · {{ store.album.year }}</p>
+      <div class="mb-10 border-b-2 border-ink pb-6">
+        <h1 class="font-display text-4xl font-bold tracking-tight text-ink">
+          {{ store.album.title }}
+        </h1>
+        <p class="mt-2 font-mono text-sm text-ink-muted">
+          {{ store.album.artist_name }} <span class="text-ink-faint">·</span>
+          <span class="tabular-nums">{{ store.album.year }}</span>
+        </p>
       </div>
 
-      <div class="tracks-section">
-        <div class="tracks-header">
-          <h2>Треки</h2>
-          <button class="btn btn-primary" type="button" @click="showAddModal = true">
+      <div>
+        <div class="mb-4 flex items-center justify-between">
+          <h2 class="font-display text-xl font-semibold tracking-tight text-ink uppercase">
+            Треки
+          </h2>
+          <button
+            type="button"
+            class="border border-ink px-4 py-2 font-mono text-xs tracking-widest text-ink uppercase transition-colors hover:bg-ink hover:text-paper"
+            @click="showAddModal = true"
+          >
             + Добавить трек
           </button>
         </div>
 
-        <p v-if="localTracks.length === 0" class="state-message">В альбоме пока нет треков.</p>
+        <p
+          v-if="localTracks.length === 0"
+          class="py-10 text-center font-mono text-sm text-ink-muted"
+        >
+          В альбоме пока нет треков.
+        </p>
         <TrackList
           v-else
           v-model="localTracks"
@@ -99,35 +124,3 @@ onMounted(() => {
     </BaseModal>
   </div>
 </template>
-
-<style scoped>
-.back-btn {
-  margin-bottom: var(--space-5);
-}
-
-.album-header h1 {
-  margin: 0 0 var(--space-1);
-  font-size: 1.75rem;
-}
-
-.artist {
-  margin: 0;
-  color: var(--color-text-muted);
-}
-
-.tracks-section {
-  margin-top: var(--space-6);
-}
-
-.tracks-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: var(--space-4);
-}
-
-.tracks-header h2 {
-  margin: 0;
-  font-size: 1.25rem;
-}
-</style>

@@ -5,26 +5,17 @@ defineProps<{ placeholder?: string }>()
 </script>
 
 <template>
-  <input
-    v-model="model"
-    type="search"
-    class="search-input"
-    :placeholder="placeholder ?? 'Поиск…'"
-  />
+  <div class="relative">
+    <span
+      class="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 font-mono text-ink-faint"
+      aria-hidden="true"
+      >⌕</span
+    >
+    <input
+      v-model="model"
+      type="search"
+      class="w-full border border-line bg-surface py-2 pr-3 pl-9 text-ink placeholder:text-ink-faint focus-visible:border-accent"
+      :placeholder="placeholder ?? 'Поиск…'"
+    />
+  </div>
 </template>
-
-<style scoped>
-.search-input {
-  width: 100%;
-  padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface);
-  color: var(--color-text);
-}
-
-.search-input:focus {
-  outline: 2px solid var(--color-primary);
-  outline-offset: -1px;
-}
-</style>

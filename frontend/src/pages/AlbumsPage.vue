@@ -116,16 +116,26 @@ onMounted(async () => {
 
 <template>
   <div>
-    <div class="page-header">
-      <h1>Альбомы</h1>
-      <button class="btn btn-primary" type="button" @click="showCreateModal = true">
+    <div class="mb-8 flex flex-wrap items-baseline justify-between gap-3">
+      <h1 class="font-display text-3xl font-bold tracking-tight text-ink">Альбомы</h1>
+      <button
+        type="button"
+        class="border border-ink px-4 py-2 font-mono text-xs tracking-widest text-ink uppercase transition-colors hover:bg-ink hover:text-paper"
+        @click="showCreateModal = true"
+      >
         + Добавить альбом
       </button>
     </div>
 
-    <div class="filters">
+    <div
+      class="mb-8 grid grid-cols-1 gap-3 border border-line bg-surface p-4 sm:grid-cols-2 lg:grid-cols-4"
+    >
       <SearchInput v-model="searchInput" placeholder="Поиск по названию или исполнителю…" />
-      <select :value="store.filters.artist ?? ''" @change="onArtistFilterChange">
+      <select
+        :value="store.filters.artist ?? ''"
+        class="border border-line bg-surface px-3 py-2 text-ink focus-visible:border-accent"
+        @change="onArtistFilterChange"
+      >
         <option value="">Все исполнители</option>
         <option v-for="artist in artists" :key="artist.id" :value="artist.id">
           {{ artist.name }}
@@ -135,22 +145,29 @@ onMounted(async () => {
         type="number"
         placeholder="Год от"
         :value="store.filters.yearMin ?? ''"
+        class="border border-line bg-surface px-3 py-2 font-mono tabular-nums text-ink placeholder:font-sans focus-visible:border-accent"
         @change="onYearMinChange"
       />
       <input
         type="number"
         placeholder="Год до"
         :value="store.filters.yearMax ?? ''"
+        class="border border-line bg-surface px-3 py-2 font-mono tabular-nums text-ink placeholder:font-sans focus-visible:border-accent"
         @change="onYearMaxChange"
       />
     </div>
 
-    <p v-if="store.loading" class="state-message">Загрузка…</p>
-    <p v-else-if="store.error" class="state-message">{{ store.error }}</p>
-    <p v-else-if="store.items.length === 0" class="state-message">
+    <p v-if="store.loading" class="py-16 text-center font-mono text-sm text-ink-muted">Загрузка…</p>
+    <p v-else-if="store.error" class="py-16 text-center font-mono text-sm text-danger">
+      {{ store.error }}
+    </p>
+    <p
+      v-else-if="store.items.length === 0"
+      class="py-16 text-center font-mono text-sm text-ink-muted"
+    >
       Ничего не найдено. Попробуйте изменить фильтры.
     </p>
-    <div v-else class="albums-grid">
+    <div v-else class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       <AlbumCard
         v-for="album in store.items"
         :key="album.id"
@@ -170,47 +187,3 @@ onMounted(async () => {
     </BaseModal>
   </div>
 </template>
-
-<style scoped>
-.page-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: var(--space-5);
-  gap: var(--space-3);
-  flex-wrap: wrap;
-}
-
-.page-header h1 {
-  margin: 0;
-  font-size: 1.5rem;
-}
-
-.filters {
-  display: grid;
-  grid-template-columns: 2fr 1.5fr 1fr 1fr;
-  gap: var(--space-3);
-  margin-bottom: var(--space-5);
-}
-
-.filters select,
-.filters input[type='number'] {
-  padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface);
-  color: var(--color-text);
-}
-
-.albums-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: var(--space-4);
-}
-
-@media (max-width: 640px) {
-  .filters {
-    grid-template-columns: 1fr;
-  }
-}
-</style>

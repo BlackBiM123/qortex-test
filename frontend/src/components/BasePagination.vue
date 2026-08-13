@@ -12,14 +12,25 @@ function go(page: number) {
 </script>
 
 <template>
-  <nav v-if="totalPages > 1" class="pagination" aria-label="Постраничная навигация">
-    <button class="btn btn-secondary" type="button" :disabled="page <= 1" @click="go(page - 1)">
+  <nav
+    v-if="totalPages > 1"
+    class="mt-10 flex items-center justify-center gap-6"
+    aria-label="Постраничная навигация"
+  >
+    <button
+      type="button"
+      class="border border-ink px-3 py-1.5 font-mono text-xs uppercase tracking-widest text-ink transition-colors hover:bg-ink hover:text-paper disabled:cursor-not-allowed disabled:border-line disabled:text-ink-faint disabled:hover:bg-transparent disabled:hover:text-ink-faint"
+      :disabled="page <= 1"
+      @click="go(page - 1)"
+    >
       ← Назад
     </button>
-    <span class="page-info">{{ page }} из {{ totalPages }}</span>
+    <span class="font-mono text-sm tabular-nums text-ink-muted">
+      {{ String(page).padStart(2, '0') }} / {{ String(totalPages).padStart(2, '0') }}
+    </span>
     <button
-      class="btn btn-secondary"
       type="button"
+      class="border border-ink px-3 py-1.5 font-mono text-xs uppercase tracking-widest text-ink transition-colors hover:bg-ink hover:text-paper disabled:cursor-not-allowed disabled:border-line disabled:text-ink-faint disabled:hover:bg-transparent disabled:hover:text-ink-faint"
       :disabled="page >= totalPages"
       @click="go(page + 1)"
     >
@@ -27,18 +38,3 @@ function go(page: number) {
     </button>
   </nav>
 </template>
-
-<style scoped>
-.pagination {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-4);
-  margin-top: var(--space-5);
-}
-
-.page-info {
-  color: var(--color-text-muted);
-  font-size: 0.9375rem;
-}
-</style>

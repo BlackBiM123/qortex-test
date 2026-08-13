@@ -54,37 +54,64 @@ function handleSubmit() {
 </script>
 
 <template>
-  <form @submit.prevent="handleSubmit">
-    <div class="field">
-      <label for="album-title">Название</label>
-      <input id="album-title" v-model="values.title" type="text" autocomplete="off" />
-      <span v-if="errors.title" class="field-error">{{ errors.title }}</span>
+  <form class="flex flex-col gap-5" @submit.prevent="handleSubmit">
+    <div>
+      <label
+        for="album-title"
+        class="mb-1 block font-mono text-xs tracking-widest text-ink-muted uppercase"
+        >Название</label
+      >
+      <input
+        id="album-title"
+        v-model="values.title"
+        type="text"
+        autocomplete="off"
+        class="w-full border border-line bg-surface px-3 py-2 text-ink focus-visible:border-accent"
+      />
+      <span v-if="errors.title" class="mt-1 block text-xs text-danger">{{ errors.title }}</span>
     </div>
 
-    <div class="field">
-      <label for="album-artist">Исполнитель</label>
-      <select id="album-artist" v-model.number="values.artist">
+    <div>
+      <label
+        for="album-artist"
+        class="mb-1 block font-mono text-xs tracking-widest text-ink-muted uppercase"
+        >Исполнитель</label
+      >
+      <select
+        id="album-artist"
+        v-model.number="values.artist"
+        class="w-full border border-line bg-surface px-3 py-2 text-ink focus-visible:border-accent"
+      >
         <option :value="null" disabled>Выберите исполнителя</option>
         <option v-for="artist in artists" :key="artist.id" :value="artist.id">
           {{ artist.name }}
         </option>
       </select>
-      <span v-if="errors.artist" class="field-error">{{ errors.artist }}</span>
+      <span v-if="errors.artist" class="mt-1 block text-xs text-danger">{{ errors.artist }}</span>
     </div>
 
-    <div class="field">
-      <label for="album-year">Год выпуска</label>
+    <div>
+      <label
+        for="album-year"
+        class="mb-1 block font-mono text-xs tracking-widest text-ink-muted uppercase"
+        >Год выпуска</label
+      >
       <input
         id="album-year"
         v-model.number="values.year"
         type="number"
         :max="currentYear + 1"
         min="1860"
+        class="w-full border border-line bg-surface px-3 py-2 font-mono tabular-nums text-ink focus-visible:border-accent"
       />
-      <span v-if="errors.year" class="field-error">{{ errors.year }}</span>
+      <span v-if="errors.year" class="mt-1 block text-xs text-danger">{{ errors.year }}</span>
     </div>
 
-    <button class="btn btn-primary" type="submit" :disabled="!isValid || submitting">
+    <button
+      type="submit"
+      :disabled="!isValid || submitting"
+      class="self-start bg-accent px-5 py-2.5 font-mono text-xs tracking-widest text-paper uppercase transition-colors hover:bg-accent-strong disabled:cursor-not-allowed disabled:opacity-40"
+    >
       {{ submitting ? 'Сохранение…' : 'Сохранить' }}
     </button>
   </form>

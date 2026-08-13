@@ -53,103 +53,97 @@ function handleSubmit() {
 </script>
 
 <template>
-  <form @submit.prevent="handleSubmit">
-    <div class="mode-tabs">
+  <form class="flex flex-col gap-5" @submit.prevent="handleSubmit">
+    <div class="flex border border-line font-mono text-xs tracking-widest uppercase">
       <button
         type="button"
-        class="btn"
-        :class="mode === 'existing' ? 'btn-primary' : 'btn-secondary'"
+        class="flex-1 px-3 py-2 transition-colors"
+        :class="
+          mode === 'existing' ? 'bg-ink text-paper' : 'bg-surface text-ink-muted hover:text-ink'
+        "
         @click="mode = 'existing'"
       >
         Существующая песня
       </button>
       <button
         type="button"
-        class="btn"
-        :class="mode === 'new' ? 'btn-primary' : 'btn-secondary'"
+        class="flex-1 px-3 py-2 transition-colors"
+        :class="mode === 'new' ? 'bg-ink text-paper' : 'bg-surface text-ink-muted hover:text-ink'"
         @click="mode = 'new'"
       >
         Новая песня
       </button>
     </div>
 
-    <div v-if="mode === 'existing'" class="field autocomplete">
-      <label for="song-search">Найдите песню в каталоге</label>
+    <div v-if="mode === 'existing'" class="relative">
+      <label
+        for="song-search"
+        class="mb-1 block font-mono text-xs tracking-widest text-ink-muted uppercase"
+        >Найдите песню в каталоге</label
+      >
       <input
         id="song-search"
         v-model="query"
         type="text"
         autocomplete="off"
         placeholder="Начните вводить название…"
+        class="w-full border border-line bg-surface px-3 py-2 text-ink focus-visible:border-accent"
         @input="selectedSong = null"
       />
-      <ul v-if="results.length" class="results">
-        <li v-for="song in results" :key="song.id" @click="pickSong(song)">
+      <ul
+        v-if="results.length"
+        class="absolute inset-x-0 top-full z-10 max-h-48 overflow-y-auto border border-t-0 border-line bg-surface shadow-lg"
+      >
+        <li
+          v-for="song in results"
+          :key="song.id"
+          class="cursor-pointer px-3 py-2 text-ink hover:bg-paper"
+          @click="pickSong(song)"
+        >
           {{ song.title }}
         </li>
       </ul>
-      <span v-if="selectedSong" class="field-hint">Выбрано: «{{ selectedSong.title }}»</span>
+      <span v-if="selectedSong" class="mt-1 block text-xs text-success"
+        >Выбрано: «{{ selectedSong.title }}»</span
+      >
     </div>
 
-    <div v-else class="field">
-      <label for="new-song-title">Название новой песни</label>
-      <input id="new-song-title" v-model="newTitle" type="text" autocomplete="off" />
+    <div v-else>
+      <label
+        for="new-song-title"
+        class="mb-1 block font-mono text-xs tracking-widest text-ink-muted uppercase"
+        >Название новой песни</label
+      >
+      <input
+        id="new-song-title"
+        v-model="newTitle"
+        type="text"
+        autocomplete="off"
+        class="w-full border border-line bg-surface px-3 py-2 text-ink focus-visible:border-accent"
+      />
     </div>
 
-    <div class="field">
-      <label for="track-position">Номер трека (необязательно)</label>
-      <input id="track-position" v-model.number="position" type="number" min="1" />
+    <div>
+      <label
+        for="track-position"
+        class="mb-1 block font-mono text-xs tracking-widest text-ink-muted uppercase"
+        >Номер трека (необязательно)</label
+      >
+      <input
+        id="track-position"
+        v-model.number="position"
+        type="number"
+        min="1"
+        class="w-full border border-line bg-surface px-3 py-2 font-mono tabular-nums text-ink focus-visible:border-accent"
+      />
     </div>
 
     <button
-      class="btn btn-primary"
       type="submit"
       :disabled="props.submitting || (mode === 'existing' ? !selectedSong : !newTitle.trim())"
+      class="self-start bg-accent px-5 py-2.5 font-mono text-xs tracking-widest text-paper uppercase transition-colors hover:bg-accent-strong disabled:cursor-not-allowed disabled:opacity-40"
     >
       {{ props.submitting ? 'Добавление…' : 'Добавить трек' }}
     </button>
   </form>
 </template>
-
-<style scoped>
-.mode-tabs {
-  display: flex;
-  gap: var(--space-2);
-  margin-bottom: var(--space-4);
-}
-
-.autocomplete {
-  position: relative;
-}
-
-.results {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  z-index: 10;
-  list-style: none;
-  margin: 0;
-  padding: var(--space-1) 0;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-md);
-  max-height: 200px;
-  overflow-y: auto;
-}
-
-.results li {
-  padding: var(--space-2) var(--space-3);
-  cursor: pointer;
-}
-
-.results li:hover {
-  background: var(--color-bg);
-}
-
-.field-hint {
-  font-size: 0.8125rem;
-  color: var(--color-success);
-}
-</style>
