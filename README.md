@@ -123,6 +123,22 @@ CI (`.github/workflows/ci.yml`) прогоняет всё это на кажды
 **Vercel**, backend — на **Render**, база данных — на **Neon** (у Render свой бесплатный Postgres
 истекает через 30 дней, у Neon бессрочный free tier).
 
+### Живая версия для проверки
+
+Задеплоено для ревью прямо из этого репозитория (ветка `main`):
+
+| Что | Куда | Что там |
+|---|---|---|
+| Frontend | **[qortex-catalog.vercel.app](https://qortex-catalog.vercel.app)** | Vercel, статическая сборка Vue-приложения |
+| Backend API | **[qortex-catalog-backend.onrender.com/api/](https://qortex-catalog-backend.onrender.com/api/)** | Render, Docker-контейнер из `backend/Dockerfile` |
+| API-документация | **[.../api/docs/](https://qortex-catalog-backend.onrender.com/api/docs/)** | Swagger UI (drf-spectacular) |
+| База данных | Neon PostgreSQL | миграции и демоданные из `seed_demo` уже загружены |
+
+> Backend на бесплатном плане Render засыпает после 15 минут простоя — первый запрос после
+> паузы может занять ~30–60 секунд, дальше работает как обычно. Доступ к самой базе данных
+> (connection string) не публикуется — для проверки приложения он не нужен, только сами ссылки
+> выше. Ниже — как развернуть то же самое с нуля на своих аккаунтах.
+
 Репозиторий уже содержит всю нужную конфигурацию (`render.yaml`, `frontend/vercel.json`,
 gunicorn+whitenoise в backend), но сами аккаунты и связку через дашборды нужно завести вручную —
 это шаги с OAuth/оплатой, которые нельзя выполнить программно.
